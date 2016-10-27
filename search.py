@@ -83,7 +83,7 @@ def depthFirstSearch(problem):
   """
   "*** YOUR CODE HERE ***"
 
-  
+
   myDFSAnswer = []    # List of actions
   nodeTraveled = []   # List of tuple(x,y)
   myDFSStack = util.Stack()
@@ -117,7 +117,7 @@ def breadthFirstSearch(problem):
   "*** YOUR CODE HERE ***"
   nodeTraveled = []   # List of tuple(x,y)
   myBFSQueue = util.Queue()
-  
+
   myCurrentPoint = problem.getStartState()
   myBFSQueue.push((myCurrentPoint,[]))
   nodeTraveled += [myCurrentPoint]
@@ -132,7 +132,7 @@ def breadthFirstSearch(problem):
     for x in range(len(myNextInfo)):
       if myNextInfo[x][0] not in nodeTraveled:
         nodeTraveled += [myNextInfo[x][0]]
-        myBFSQueue.push((myNextInfo[x][0], myCurrentAction+[myNextInfo[x][1]] )) 
+        myBFSQueue.push((myNextInfo[x][0], myCurrentAction+[myNextInfo[x][1]] ))
 
   return []
   util.raiseNotDefined()
@@ -152,6 +152,16 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
+  nodeTraveled = [] #A list of tuple
+  myPriorityQ = util.PriorityQueue()
+
+  myCurrentPoint = problem.getStartState()
+  nodeTraveled += [myCurrentPoint]
+
+  nextStepInfo = problem.getSuccessors(myCurrentPoint)
+  for x in range(len(nextStepInfo))
+    myPriorityQ.push(nextStepInfo[x])
+
   util.raiseNotDefined()
 
 
