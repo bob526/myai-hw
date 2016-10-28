@@ -152,7 +152,6 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
-  from searchAgents import manhattanHeuristic
   nodeTraveled = [] #A list of tuple
   myPriorityQ = util.PriorityQueue()
   
@@ -160,8 +159,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
   nodeTraveled += [myCurrentPoint]
   myRealCost = 0
   #myPriorityQ(((x,y)poistion, action"s",cost), priority(admissible cost))
-  myPriorityQ.push((myCurrentPoint,[],myRealCost),  manhattanHeuristic(myCurrentPoint,problem))
-  print  manhattanHeuristic(myCurrentPoint,problem)
+  myPriorityQ.push((myCurrentPoint,[],myRealCost),  heuristic(myCurrentPoint,problem))
   while not myPriorityQ.isEmpty():
     temp = myPriorityQ.pop()
     myCurrentPoint = temp[0]
@@ -173,7 +171,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     for x in range(len(nextStepInfo)):
       if nextStepInfo[x][0] not in nodeTraveled:
         nodeTraveled += [nextStepInfo[x][0]]
-        estiCost = manhattanHeuristic(nextStepInfo[x][0],problem)
+        estiCost = heuristic(nextStepInfo[x][0],problem)
         admissibleCost = myRealCost+estiCost
         myPriorityQ.push( (nextStepInfo[x][0],myCurrentActions+[nextStepInfo[x][1]],myRealCost+nextStepInfo[x][2]), admissibleCost)
 
