@@ -155,26 +155,34 @@ def aStarSearch(problem, heuristic=nullHeuristic):
   from searchAgents import manhattanHeuristic
   nodeTraveled = [] #A list of tuple
   myPriorityQ = util.PriorityQueue()
+  nodeBestAdmisibleCost = {}
 
   myCurrentPoint = problem.getStartState()
   nodeTraveled += [myCurrentPoint]
   myRealCost = 0
   #myPriorityQ(((x,y)poistion, action"s",cost), priority(admissible cost))
-  myPriorityQ.push((myCurrentPoint,[],myRealCost),  heuristic(myCurrentPoint,problem))
+  myPriorityQ.push((myCurrentPoint,[],myRealCost),  0)
+  nodeBestAdmisibleCost[myCurrentPoint]=0
+
   while not myPriorityQ.isEmpty():
     temp = myPriorityQ.pop()
+    #print temp
+
     myCurrentPoint = temp[0]
     myCurrentActions = temp[1]
     myRealCost = temp[2]
+
     if problem.isGoalState(myCurrentPoint) is True:
       return myCurrentActions
     nextStepInfo = problem.getSuccessors(myCurrentPoint)
     for x in range(len(nextStepInfo)):
-      if nextStepInfo[x][0] not in nodeTraveled:
-        nodeTraveled += [nextStepInfo[x][0]]
         estiCost = heuristic(nextStepInfo[x][0],problem)
-        admissibleCost = myRealCost+estiCost
-        myPriorityQ.push( (nextStepInfo[x][0],myCurrentActions+[nextStepInfo[x][1]],myRealCost+nextStepInfo[x][2]), admissibleCost)
+        admissibleCost = myRealCost+estiCost+nextStepInfo[x][2]
+        #print myRealCost," + esticost of",nextStepInfo[x][0],"(",estiCost,")","+",nextStepInfo[x][2]
+        if (nextStepInfo[x][0] not in nodeTraveled or admissibleCost < nodeBestAdmisibleCost[nextStepInfo[x][0]]):
+          nodeTraveled += [nextStepInfo[x][0]]
+          myPriorityQ.push( (nextStepInfo[x][0],myCurrentActions+[nextStepInfo[x][1]],myRealCost+nextStepInfo[x][2]), admissibleCost)
+          nodeBestAdmisibleCost[nextStepInfo[x][0]]=admissibleCost
 
   return []
   util.raiseNotDefined()
