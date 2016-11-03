@@ -83,7 +83,7 @@ def depthFirstSearch(problem):
   """
   "*** YOUR CODE HERE ***"
 
-  
+
   myDFSAnswer = []    # List of actions
   nodeTraveled = []   # List of tuple(x,y)
   myDFSStack = util.Stack()
@@ -117,7 +117,7 @@ def breadthFirstSearch(problem):
   "*** YOUR CODE HERE ***"
   nodeTraveled = []   # List of tuple(x,y)
   myBFSQueue = util.Queue()
-  
+
   myCurrentPoint = problem.getStartState()
   myBFSQueue.push((myCurrentPoint,[]))
   nodeTraveled += [myCurrentPoint]
@@ -132,7 +132,7 @@ def breadthFirstSearch(problem):
     for x in range(len(myNextInfo)):
       if myNextInfo[x][0] not in nodeTraveled:
         nodeTraveled += [myNextInfo[x][0]]
-        myBFSQueue.push((myNextInfo[x][0], myCurrentAction+[myNextInfo[x][1]] )) 
+        myBFSQueue.push((myNextInfo[x][0], myCurrentAction+[myNextInfo[x][1]] ))
 
   return []
   util.raiseNotDefined()
@@ -152,28 +152,37 @@ def nullHeuristic(state, problem=None):
 def aStarSearch(problem, heuristic=nullHeuristic):
   "Search the node that has the lowest combined cost and heuristic first."
   "*** YOUR CODE HERE ***"
+  from searchAgents import manhattanHeuristic
   nodeTraveled = [] #A list of tuple
   myPriorityQ = util.PriorityQueue()
-  
+  nodeBestAdmisibleCost = {}
+
   myCurrentPoint = problem.getStartState()
   nodeTraveled += [myCurrentPoint]
   myRealCost = 0
   #myPriorityQ(((x,y)poistion, action"s",cost), priority(admissible cost))
-  myPriorityQ.push((myCurrentPoint,[],myRealCost),  heuristic(myCurrentPoint,problem))
+  myPriorityQ.push((myCurrentPoint,[],myRealCost),  0)
+  nodeBestAdmisibleCost[myCurrentPoint]=0
+
   while not myPriorityQ.isEmpty():
     temp = myPriorityQ.pop()
+    #print temp
+
     myCurrentPoint = temp[0]
     myCurrentActions = temp[1]
     myRealCost = temp[2]
+
     if problem.isGoalState(myCurrentPoint) is True:
       return myCurrentActions
     nextStepInfo = problem.getSuccessors(myCurrentPoint)
     for x in range(len(nextStepInfo)):
-      if nextStepInfo[x][0] not in nodeTraveled:
-        nodeTraveled += [nextStepInfo[x][0]]
         estiCost = heuristic(nextStepInfo[x][0],problem)
-        admissibleCost = myRealCost+estiCost
-        myPriorityQ.push( (nextStepInfo[x][0],myCurrentActions+[nextStepInfo[x][1]],myRealCost+nextStepInfo[x][2]), admissibleCost)
+        admissibleCost = myRealCost+estiCost+nextStepInfo[x][2]
+        #print myRealCost," + esticost of",nextStepInfo[x][0],"(",estiCost,")","+",nextStepInfo[x][2]
+        if (nextStepInfo[x][0] not in nodeTraveled or admissibleCost < nodeBestAdmisibleCost[nextStepInfo[x][0]]):
+          nodeTraveled += [nextStepInfo[x][0]]
+          myPriorityQ.push( (nextStepInfo[x][0],myCurrentActions+[nextStepInfo[x][1]],myRealCost+nextStepInfo[x][2]), admissibleCost)
+          nodeBestAdmisibleCost[nextStepInfo[x][0]]=admissibleCost
 
   return []
   util.raiseNotDefined()
