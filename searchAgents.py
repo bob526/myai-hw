@@ -277,34 +277,22 @@ class CornersProblem(search.SearchProblem):
     self._expanded = 0 # Number of search nodes expanded
 
     "*** YOUR CODE HERE ***"
-    global visitedCorner
-    visitedCorner = []
 
 
   def getStartState(self):
     "Returns the start state (in your state space, not the full Pacman state space)"
     "*** YOUR CODE HERE ***"
-    return self.startingPosition
+    # (position , visitedCorner)
+    return (self.startingPosition,[])
     util.raiseNotDefined()
 
   def isGoalState(self, state):
     "Returns whether this search state is a goal state of the problem"
     "*** YOUR CODE HERE ***"
-
-    #if 'visitedCorner' not in globals():
-      #global visitedCorner
-      #visitedCorner = []
-
-
-
-    #if state in self.corners:
-      #if state in visitedCorner:
-        #print "Oops, you revisit the same corner"
-      #else:
-        #visitedCorner += [state]
-
-    #print visitedCorner
-    if len(visitedCorner) == 4:
+    #if (state[0] in self.corners and state[0] not in state[1]):
+      #state[1].append(state[0])
+    #print state[1]
+    if len(state[1]) == 4:
       return True
     else:
       return False
@@ -332,20 +320,21 @@ class CornersProblem(search.SearchProblem):
       #   nextx, nexty = int(x + dx), int(y + dy)
       #   hitsWall = self.walls[nextx][nexty]
       "*** YOUR CODE HERE ***"
-      x,y = state
+      from copy import copy
+      x,y = state[0]
       dx, dy = Actions.directionToVector(action)
       # This is the calculation need for the new position
       nextx, nexty = int(x + dx), int(y + dy)
+      cornerHistory = copy(state[1])
       hitsWall = self.walls[nextx][nexty]
       # hitsWall is boolean variable
       if hitsWall is False:
-        nextState = (nextx, nexty)
+        nextPos = (nextx, nexty)
+        if (nextPos in self.corners and nextPos not in cornerHistory):
+          cornerHistory += [(nextPos)]
+        nextState = (nextPos, cornerHistory)
         cost = 1
         successors.append( ( nextState, action, cost) )
-        if nextState in self.corners:
-          if nextState not in visitedCorner:
-            visitedCorner.append(nextState)
-            #print visitedCorner
 
 
     self._expanded += 1
