@@ -159,7 +159,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
 
   myCurrentPoint = problem.getStartState()
   # SPecial case for corner problem
-  if type(myCurrentPoint[1]) is list:
+  if (len(myCurrentPoint)>1 and type(myCurrentPoint[1]) is list):
     putInDict = (myCurrentPoint[0],tuple(myCurrentPoint[1]))
   else:
     putInDict = myCurrentPoint
@@ -182,7 +182,7 @@ def aStarSearch(problem, heuristic=nullHeuristic):
     nextStepInfo = problem.getSuccessors(myCurrentPoint)
     for x in range(len(nextStepInfo)):
         # Special case for corner problem
-        if type(nextStepInfo[x][0][1]) is list:
+        if (len(nextStepInfo[x][0])>1 and type(nextStepInfo[x][0][1]) is list):
           putInDict = (nextStepInfo[x][0][0],tuple(nextStepInfo[x][0][1]))
         else:
           putInDict = nextStepInfo[x][0]
