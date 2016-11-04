@@ -158,11 +158,16 @@ def aStarSearch(problem, heuristic=nullHeuristic):
   nodeBestAdmisibleCost = {}
 
   myCurrentPoint = problem.getStartState()
+  # SPecial case for corner problem
+  if type(myCurrentPoint[1]) is list:
+    putInDict = (myCurrentPoint[0],tuple(myCurrentPoint[1]))
+  else:
+    putInDict = myCurrentPoint
   nodeTraveled += [myCurrentPoint]
   myRealCost = 0
   #myPriorityQ(((x,y)poistion, action"s",cost), priority(admissible cost))
   myPriorityQ.push((myCurrentPoint,[],myRealCost),  0)
-  nodeBestAdmisibleCost[myCurrentPoint]=0
+  nodeBestAdmisibleCost[putInDict]=0
 
   while not myPriorityQ.isEmpty():
     temp = myPriorityQ.pop()
@@ -176,13 +181,19 @@ def aStarSearch(problem, heuristic=nullHeuristic):
       return myCurrentActions
     nextStepInfo = problem.getSuccessors(myCurrentPoint)
     for x in range(len(nextStepInfo)):
+        # Special case for corner problem
+        if type(nextStepInfo[x][0][1]) is list:
+          putInDict = (nextStepInfo[x][0][0],tuple(nextStepInfo[x][0][1]))
+        else:
+          putInDict = nextStepInfo[x][0]
         estiCost = heuristic(nextStepInfo[x][0],problem)
         admissibleCost = myRealCost+estiCost+nextStepInfo[x][2]
         #print myRealCost," + esticost of",nextStepInfo[x][0],"(",estiCost,")","+",nextStepInfo[x][2]
-        if (nextStepInfo[x][0] not in nodeTraveled or admissibleCost < nodeBestAdmisibleCost[nextStepInfo[x][0]]):
+        if (nextStepInfo[x][0] not in nodeTraveled or admissibleCost < nodeBestAdmisibleCost[putInDict]):
           nodeTraveled += [nextStepInfo[x][0]]
           myPriorityQ.push( (nextStepInfo[x][0],myCurrentActions+[nextStepInfo[x][1]],myRealCost+nextStepInfo[x][2]), admissibleCost)
-          nodeBestAdmisibleCost[nextStepInfo[x][0]]=admissibleCost
+         
+          nodeBestAdmisibleCost[putInDict]=admissibleCost
 
   return []
   util.raiseNotDefined()
